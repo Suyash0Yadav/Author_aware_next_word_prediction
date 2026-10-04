@@ -1,0 +1,5 @@
+system,ksr,top3,archaic_ksr
+"unigram, no completion",0.0429,0.0881,0.0
+unigram + completion,0.3967,0.0881,0.3461
+"KN-3, no completion",0.126,0.2281,0.1216
+KN-3 + completion,0.4789,0.2281,0.5064

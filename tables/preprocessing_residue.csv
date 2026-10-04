@@ -1,0 +1,6 @@
+residue,count,unit,of_which_direction_like,direction_like_tokens,pct_of_tokens
+lines starting with Enter/Exit/Exeunt/Re-enter,8,lines,2,19,0.0022
+un-bracketed 1-space-indented paragraphs (no keyword),35,paragraphs,29,266,0.0301
+ALL-CAPS tokens in plays (unmatched tags / headings),5,tokens,5,5,0.0006
+"ALL-CAPS tokens in poems (dedications, kept on purpose)",28,tokens,0,0,0.0
+"TOTAL detectable residue (rows 1-3, direction-like)",,tokens,,290,0.0328

@@ -1,0 +1,11 @@
+stage,name,description,unit,n_tokens,vocab_size,n_sentences
+0,raw,raw works (data/works),whitespace words,963240,71160,
+1,normalized,"NFC, curly->straight, single-quote marks removed",whitespace words,963240,70765,
+2,structure_removed,"front matter, ACT/SCENE headers, sonnet numbers, Latin epigraph removed",whitespace words,946246,69441,
+3,directions_removed,bracketed + Enter/Exit/Exeunt directions removed,whitespace words,920208,67166,
+4,italics_stripped,italic underscores stripped,whitespace words,920184,66768,
+5,speaker_tags_removed,speaker tags removed,whitespace words,883468,65885,
+6,sentences,"speeches joined, split at . ! ?",whitespace words,884135,65573,68379.0
+7,tokenized,"punctuation/apostrophe/digit rules, cased",tokens,1063809,32111,68379.0
+8,lowercased,lowercased,tokens,1063809,27018,68379.0
+9,vocabulary,"train vocab, min_freq=2, rest -> <unk> (all splits)",tokens,1063809,14713,68379.0

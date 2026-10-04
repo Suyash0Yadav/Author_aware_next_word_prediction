@@ -1,0 +1,3 @@
+group,tokens,pct_oov_vs_train_vocab
+"test tokens removed by cleaning (speaker tags, directions, headers, front matter)",9031,22.1
+test tokens kept (the actual speech),84073,2.2

@@ -1,0 +1,41 @@
+model,temperature,sample
+LSTM,0.7,Let me hear it.
+LSTM,0.7,Here comes the Duke.
+LSTM,0.7,"Come, come, come."
+LSTM,0.7,Or there?
+LSTM,0.7,"God bless you, good sir!"
+LSTM,0.7,Ha!
+LSTM,0.7,"What, is this lord a daughter?"
+LSTM,0.7,My master is not my brother.
+LSTM,0.7,"The King's part of Rome, that I have found of all my father's power, and, have I been some in, I will have no fall of but so."
+LSTM,0.7,I may not be with you.
+LSTM,1.0,"Hence, cur!"
+LSTM,1.0,Ambassadors with suits.
+LSTM,1.0,No fault of valour to my music.
+LSTM,1.0,'tis strange.
+LSTM,1.0,"He'll pay you with the place: give Arcite to that Duke, and let it first hear those enemy to evil prisoners, I never will than, though all myself were done, and you us say for"
+LSTM,1.0,After her?
+LSTM,1.0,Will I see you?
+LSTM,1.0,"This is the cause of Caesar: let his dam be; and an ill did men, yet we are men that she is to invest 'em with your wronger; our fortunes for the weighty business, not"
+LSTM,1.0,Did I perceive by these things that would give you more?
+LSTM,1.0,"What, in our friends a battle?"
+KN trigram,0.7,"Well, well; and ere he can to our house in him that he is in the laws of Venice."
+KN trigram,0.7,"Where is the Prince, and she hath despised, to do, and be you had not been made to bear with me."
+KN trigram,0.7,I will.
+KN trigram,0.7,"Now, sir, my lord."
+KN trigram,0.7,"But with my tears, and my for in the thing he would not be a heavy hand of death, shall I, and then I will not, by my faith, it is, and given up"
+KN trigram,0.7,"Come, gentlemen, all my heart."
+KN trigram,0.7,He is a woman.
+KN trigram,0.7,"O, be gone, and the rest."
+KN trigram,0.7,"You have the far the weaker vessel of a the Frenchmen are foul, as you think of it."
+KN trigram,0.7,"So I, sir; and he that hath a horse, my lord?"
+KN trigram,1.0,"Ay, there's was the inundation of double, friends, although thy friendship?"
+KN trigram,1.0,"O, ay, father, unseen spirit doth his Majesty."
+KN trigram,1.0,"Why do catch the strong were my too much, like a toy does it under sudden upon you have a son."
+KN trigram,1.0,"Go with us, we have the trumpet him by any means and duty?"
+KN trigram,1.0,Shall I know our friends.
+KN trigram,1.0,He doth court told her here against the and to friends.
+KN trigram,1.0,"They have thanks, good time and place."
+KN trigram,1.0,"Six braver bids me changes aim new mistress, and sometimes hath me to them, without doubt they know he doth deny, thou the chamber, and to make a puppet of her first."
+KN trigram,1.0,"Now do I see that rebuke from our peace, which he, madam?"
+KN trigram,1.0,"O, let me see thou fail, ride, and yet to learn any man swears that she with saints to the grave makers howling winds sue tooth on my knee I beg, hast thou seized by the"

@@ -1,0 +1,3 @@
+model,sentences,positions,max_abs_prob_difference,argmax_identical
+rnn_h512_l1_d0.5,50,838,1.945386076951383e-06,True
+lstm_h512_l1_d0.5,50,838,2.502667782566803e-06,True

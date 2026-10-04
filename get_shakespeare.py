@@ -225,13 +225,22 @@ def split_works(body: str) -> list[tuple[str, str]]:
     titles, after_contents = parse_contents(lines)
     print(f"[3/5] Contents lists {len(titles)} titles.")
 
-    # Index of every line (after the Contents block) by normalised content,
-    # so each title is matched as a WHOLE line, not a substring.
+    # The Contents list and the heading in the body do not always agree: e.g. Contents says
+    # "KING RICHARD THE SECOND" but the body heading is "THE LIFE AND DEATH OF KING RICHARD THE
+    # SECOND" (the short form also appears earlier in that play's character list, which used to be
+    # mistaken for the start of the work). So every title is looked up under its Contents spelling
+    # AND with the usual heading prefixes, and the EARLIEST whole-line match wins.
+    prefixes = ["", "THE LIFE AND DEATH OF ", "THE LIFE OF ", "THE TRAGEDY OF ",
+                "THE COMEDY OF ", "THE HISTORY OF "]
+    variants = {}                                     # normalised variant -> Contents title key
+    for t in titles:
+        for pre in prefixes:
+            variants.setdefault(norm(pre + t), norm(t))
     wanted = {norm(t): t for t in titles}
-    starts = {}                                       # normalised title -> line no.
+    starts = {}                                       # normalised Contents title -> line no.
     for n in range(after_contents, len(lines)):
-        key = norm(lines[n])
-        if key in wanted and key not in starts:       # first occurrence wins
+        key = variants.get(norm(lines[n]))            # whole-line match only
+        if key is not None and key not in starts:     # first occurrence wins
             starts[key] = n
 
     missing = [t for t in titles if norm(t) not in starts]
@@ -246,6 +255,15 @@ def split_works(body: str) -> list[tuple[str, str]]:
         end = ordered[idx + 1][1] if idx + 1 < len(ordered) else len(lines)
         text = "\n".join(lines[begin:end]).strip("\n") + "\n"
         works.append((wanted[key], text))
+
+    # Sanity check: no work may contain the heading line of ANOTHER work (that would mean a
+    # boundary was placed too late, as happened with Richard II / Pericles).
+    for title, text in works:
+        own = {v for v, k in variants.items() if k == norm(title)}
+        foreign = [l.strip() for l in text.splitlines()
+                   if variants.get(norm(l)) not in (None, norm(title)) and norm(l) not in own]
+        if foreign:
+            print(f"      WARNING: {title!r} contains another work's title line(s): {foreign[:3]}")
     return works
 
 

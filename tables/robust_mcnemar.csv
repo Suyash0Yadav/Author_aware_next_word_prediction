@@ -1,0 +1,2 @@
+targets,n,both_correct,only_LSTM_correct,only_KN3_correct,neither,p_exact,chi2_cc,p_chi2
+thou / thee / thy / thine,1677,171,141,37,1328,1.6780779183130811e-15,59.60112359550562,1.1616882395422552e-14

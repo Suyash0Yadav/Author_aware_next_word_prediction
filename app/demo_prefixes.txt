@@ -1,0 +1,12 @@
+# Prefixes from the TEST plays where the Shakespeare model predicts the next word and the WikiText model does not.
+# format:  prefix  |||  note
+If thou beest a man, show thyself in  |||  tempest: Shakespeare model -> "thy", WikiText model -> "the" (rank 20,988)
+So thy grand captain Antony  |||  antony and cleopatra: Shakespeare model -> "shall", WikiText model -> "was" (rank 18,740)
+Ah, villain,  |||  second part of king henry the sixth: Shakespeare model -> "thou", WikiText model -> "and" (rank 12,167)
+Sword, I will hallow thee for this  |||  second part of king henry the sixth: Shakespeare model -> "thy", WikiText model -> "the" (rank 11,985)
+If thou say so, villain,  |||  antony and cleopatra: Shakespeare model -> "thou", WikiText model -> "and" (rank 10,786)
+Thou art, if  |||  antony and cleopatra: Shakespeare model -> "thou", WikiText model -> "and" (rank 7,588)
+Be that thou hop'st to be, or what  |||  second part of king henry the sixth: Shakespeare model -> "thou", WikiText model -> "the" (rank 3,635)
+Be that thou know'st thou art, and then  |||  twelfth night or what you will: Shakespeare model -> "thou", WikiText model -> "the" (rank 1,752)
+Beat him enough: after a little time,  |||  tempest: Shakespeare model -> "i'll", WikiText model -> "in" (rank 207)
+God buy you, good  |||  twelfth night or what you will: Shakespeare model -> "sir", WikiText model -> "and" (rank 4,321)

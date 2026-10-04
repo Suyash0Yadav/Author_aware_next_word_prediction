@@ -1,0 +1,5 @@
+model,requests,model_call_ms_median,model_call_ms_p95,suggest_ms_median,suggest_ms_p95,end_to_end_ms_median,end_to_end_ms_p95
+KN trigram,580,0.04,0.07,2.22,3.42,4.36,5.54
+LSTM,580,4.7,5.32,7.61,9.08,10.55,11.99
+Ensemble,580,4.94,5.7,8.2,9.48,10.79,12.15
+WikiText LSTM,580,6.78,7.91,11.58,13.79,14.24,16.69

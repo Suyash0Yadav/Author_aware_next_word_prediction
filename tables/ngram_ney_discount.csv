@@ -1,0 +1,4 @@
+level,n1,n2,ney_D
+trigram level (raw counts),486834,41619,0.854
+bigram level (continuation counts),171476,31137,0.7336
+unigram level (continuation counts),570,3707,0.0714

@@ -1,0 +1,5 @@
+subset,n,stage-4 restoration (%),all lowercase (%),capitalise sentence start only (%)
+correctly predicted words (top-1),11268,92.83,80.16,85.0
+  ... at a sentence start,546,100.0,0.0,100.0
+  ... mid-sentence,10722,92.46,84.24,84.24
+all word targets (for reference),81229,93.43,80.97,89.45

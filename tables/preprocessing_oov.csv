@@ -1,0 +1,4 @@
+split,tokens,word_tokens,unk_pct_all_tokens,unk_pct_word_tokens,word_types,oov_pct_word_types
+train,842748,703948,1.16,1.39,24454,39.87
+val,119916,100177,2.7,3.23,9149,24.0
+test,101145,84068,2.81,3.38,8577,23.8

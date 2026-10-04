@@ -1,0 +1,3 @@
+model,positions,raw top-1 is special/punct (%),any of raw top-3 is special/punct (%),targets that are words (%)
+LSTM,108336,39.03,53.56,74.98
+KN trigram,108336,40.74,59.23,74.98

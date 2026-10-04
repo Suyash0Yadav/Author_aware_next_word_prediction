@@ -1,0 +1,11 @@
+kind,play,prefix,actual_next,actual_rank,in_top5,top1,top2,top3,top4,top5
+archaic next word,antony_and_cleopatra,i have seen thee fight when i have envied,thy,29,False,the (0.033),his (0.029),him (0.028),against (0.026),of (0.013)
+archaic next word,twelfth_night_or_what_you_will,"alas , poor fool , how have they baffled",thee,37,False,here (0.052),of (0.013),and (0.012),to (0.012),in (0.010)
+archaic next word,second_part_of_king_henry_the_sixth,"my lord ,",i'll,19,False,i (0.138),and (0.072),you (0.046),my (0.036),that (0.034)
+archaic next word,tempest,"to the king's ship , invisible as thou art : there",shalt,207,False,is (0.463),shall (0.103),are (0.060),was (0.014),be (0.008)
+archaic next word,antony_and_cleopatra,'tis one of those odd tricks which,sorrow,243,False,i (0.048),is (0.028),the (0.025),you (0.024),he (0.023)
+ordinary next word,twelfth_night_or_what_you_will,"then you are mad indeed , if you be no",better,3,True,more (0.205),less (0.043),better (0.036),great (0.031),other (0.016)
+ordinary next word,second_part_of_king_henry_the_sixth,"nay , john , it will be stinking law , for",his,13,False,i (0.095),the (0.068),my (0.040),he (0.038),a (0.033)
+ordinary next word,tempest,"my high charms work , and these mine enemies are all knit up in their <unk> ; they now are in my power ; and in these fits i leave them , while i visit young ferdinand , whom they suppose is",drown'd,1533,False,a (0.031),the (0.031),not (0.029),in (0.020),to (0.019)
+ordinary next word,tempest,"prithee , say",on,55,False,i (0.188),you (0.099),they (0.044),what (0.043),no (0.024)
+ordinary next word,second_part_of_king_henry_the_sixth,by devilish policy art thou grown great,and,2,True,in (0.019),and (0.018),ones (0.014),men (0.013),of (0.010)

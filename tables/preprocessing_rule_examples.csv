@@ -1,0 +1,16 @@
+rule,input,output
+apostrophes: elisions,"’Tis o’er, ne’er, i’ th’ morning; kill’d, I’ll, Caesar’s, lords’","'tis o'er , ne'er , i' th' morning ; kill'd , i'll , caesar's , lords'"
+hyphens and dashes split words,"o’er-snowed, time-honoured—fear—and a want-wit","o'er snowed , time honoured fear and a want wit"
+digits -> <num>,"Item, sack, two gallons, 5s. 8d.; the 3rd of May, 1599","item , sack , two gallons , <num> . <num> . ; the <num> of may , <num>"
+only 6 punctuation marks survive,"Hark! (aside) “Who’s there?” [Exit]; yes: no, maybe.","hark ! aside who's there ? exit ; yes : no , maybe ."
+single-quote quotation marks,"Then being asked, ‘This fair child of mine shall sum my count,’ she said o’ th’ wall.","then being asked , this fair child of mine shall sum my count , she said o' th' wall ."
+speaker tag detection (all-caps before first period),HAMLET.,"('HAMLET', '')"
+speaker tag detection (all-caps before first period),FIRST CITIZEN.,"('FIRST CITIZEN', '')"
+speaker tag detection (all-caps before first period),1 KEEPER.,"('1 KEEPER', '')"
+speaker tag detection (all-caps before first period),ROSENCRANTZ and GUILDENSTERN.,"('ROSENCRANTZ and GUILDENSTERN', '')"
+speaker tag detection (all-caps before first period),FIRST GAOLER. You shall not now be stol'n,"('FIRST GAOLER', ""You shall not now be stol'n"")"
+speaker tag detection (all-caps before first period),Hamlet is sad.,None
+stage directions (stage 3),"Enter Francisco and Barnardo, two sentinels.",(whole paragraph removed)
+stage directions (stage 3),Dead March. Enter the funeral of King Henry the Fifth.,(whole paragraph removed)
+stage directions (stage 3),[_Aside._] A little more than kin.,A little more than kin.
+stage directions (stage 3),He shall to Parthia. Be it art or hap.,He shall to Parthia. Be it art or hap.

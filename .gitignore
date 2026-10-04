@@ -1,1 +1,18 @@
-/data
+# --- trained models and checkpoints (~660 MB) -- regenerate with the commands in README.md -------------------
+models/
+
+# --- all generated data: raw Gutenberg download, split works, interim stages (~60 MB), processed files, ---
+# --- WikiText-2 cache. Everything is rebuilt by get_shakespeare.py / src/preprocess.py / src/wikitext.py. ----
+/data/
+
+# --- python / jupyter / test caches -----------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+venv/
+.vscode/
+
+# --- logs ---------------------------------------------------------------------------------------------------
+*.log

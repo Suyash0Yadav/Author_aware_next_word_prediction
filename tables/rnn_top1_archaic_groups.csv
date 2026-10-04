@@ -1,0 +1,9 @@
+model,group,n_targets,top1
+KN trigram,thou / thee / thy / thine,1677,0.12403100775193798
+KN trigram,you / your,1793,0.20022308979364195
+KN trigram,hath / hast / doth / dost / art / wilt / shalt,530,0.11886792452830189
+KN trigram,all other targets (no verb form),80699,0.12614778373957547
+LSTM,thou / thee / thy / thine,1677,0.18604651162790697
+LSTM,you / your,1793,0.20803123257110986
+LSTM,hath / hast / doth / dost / art / wilt / shalt,530,0.1320754716981132
+LSTM,all other targets (no verb form),80699,0.138762562113533

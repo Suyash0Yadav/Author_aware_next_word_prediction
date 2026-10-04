@@ -1,0 +1,5 @@
+step,test_word_tokens,oov_pct
+"A  EDA: raw text (tags, directions, headers included), vocab = all train types",93104,4.13
+"B  same raw text, but train vocab with min_freq = 2",93104,5.3
+"C  cleaned text, vocab = all train types (no min_freq)",84068,2.29
+"D  cleaned text, min_freq = 2  (= final)",84068,3.38

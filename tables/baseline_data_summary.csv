@@ -1,0 +1,7 @@
+corpus,split,sentences,tokens,mean_sentence_len,pct_unk
+Shakespeare,train,53331,842748,15.8,1.16
+Shakespeare,val,7857,119916,15.3,2.7
+Shakespeare,test,7191,101145,14.1,2.81
+WikiText-2 (train subsampled),train,35862,842748,23.5,2.5
+WikiText-2 (train subsampled),val,8587,199378,23.2,5.82
+WikiText-2 (train subsampled),test,9780,223906,22.9,6.83

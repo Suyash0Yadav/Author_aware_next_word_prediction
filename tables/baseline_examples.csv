@@ -1,0 +1,11 @@
+kind,prefix,actual_next,Shakespeare LSTM top-5,rank_S,WikiText LSTM top-5,rank_W,in WikiText vocab
+archaic next word,i have seen thee fight when i have envied,thy,my (0.19) | thee (0.11) | the (0.10) | him (0.05) | her (0.04),6,the (0.05) | a (0.04) | to (0.04) | and (0.04) | in (0.03),20568.0,True
+archaic next word,"alas , poor fool , how have they baffled",thee,here (0.03) | with (0.01) | thus (0.01) | there (0.01) | in (0.01),18,and (0.12) | are (0.08) | or (0.04) | is (0.02) | had (0.01),416.0,True
+archaic next word,"my lord ,",i'll,i (0.29) | my (0.06) | you (0.05) | we (0.03) | sir (0.03),10,and (0.07) | the (0.05) | who (0.04) | a (0.03) | in (0.02),336.0,True
+archaic next word,"king's ship , invisible as thou art : there",shalt,is (0.40) | was (0.04) | are (0.04) | art (0.02) | be (0.02),88,is (0.50) | are (0.34) | was (0.05) | were (0.02) | has (0.01),,False
+archaic next word,'tis one of those odd tricks which,sorrow,i (0.14) | we (0.09) | is (0.07) | he (0.05) | they (0.04),342,was (0.08) | the (0.06) | he (0.05) | is (0.04) | had (0.03),13329.0,True
+ordinary next word,"you are mad indeed , if you be no",better,more (0.06) | man (0.04) | less (0.03) | matter (0.03) | further (0.02),6,longer (0.05) | more (0.02) | way (0.01) | real (0.01) | doubt (0.01),28.0,True
+ordinary next word,"john , it will be stinking law , for",his,i (0.07) | the (0.06) | that (0.05) | this (0.03) | they (0.03),13,example (0.31) | the (0.12) | a (0.04) | instance (0.03) | which (0.03),7.0,True
+ordinary next word,"i visit young ferdinand , whom they suppose is",drown'd,not (0.04) | the (0.01) | but (0.01) | so (0.01) | in (0.01),773,a (0.12) | the (0.07) | not (0.04) | to (0.02) | so (0.02),,False
+ordinary next word,"prithee , say",on,you (0.23) | i (0.08) | thou (0.06) | what (0.04) | not (0.03),42,that (0.46) | in (0.02) | and (0.02) | to (0.01) | the (0.01),32.0,True
+ordinary next word,by devilish policy art thou grown great,and,to (0.03) | and (0.02) | men (0.01) | of (0.01) | in (0.01),2,to (0.06) | by (0.05) | and (0.04) | in (0.03) | as (0.02),3.0,True
