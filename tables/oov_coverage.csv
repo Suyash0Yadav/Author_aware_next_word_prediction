@@ -1,0 +1,4 @@
+evaluated_set,tokens,oov_tokens,pct_oov_tokens,types,oov_types,pct_oov_types
+test vs train vocabulary,93104,3843,4.13,8670,1283,14.8
+val vs train vocabulary,108958,3850,3.53,9185,1351,14.71
+Shakespeare (all) vs WikiText-2 vocabulary,968022,60972,6.3,26909,13017,48.37

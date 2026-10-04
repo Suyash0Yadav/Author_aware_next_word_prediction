@@ -1,0 +1,11 @@
+issue,occurrences,works_affected,tokens_involved,pct_of_all_tokens,examples
+all-caps speaker tags,31745,40,36515.0,3.77,KING OF FRANCE. | THE DUKE OF FLORENCE. | COUNTESS.
+stage directions (Enter/Exit/Exeunt/[...]),6352,38,28626.0,2.96,"Enter Bertram, the Countess of Rossillon, Helena, and Lafew, all in | [_Exit Countess._] | [_To Helena._] Be comfortable to my mother, your mistress, and make"
+ACT/SCENE headers,1191,38,6294.0,0.65,ACT I | ACT II | ACT III
+underscore italics markup (_..._),5063,38,,,"[_Exit Countess._] | [_To Helena._] Be comfortable to my mother, your mistress, and make | [_Exeunt Bertram and Lafew._]"
+"'tis / 't-contractions ('twas, 'twere, ...)",1925,43,,,"My body is the frame wherein ’tis held, | ’Tis not enough that through the cloud thou break, | ’Tis thee, myself, that for myself I praise,"
+o'er,253,42,,,Beauty o’er-snowed and bareness every where: | And sable curls all silvered o’er with white: | And heavily from woe to woe tell o’er
+ne'er,258,43,,,"Such heavenly touches ne’er touched earthly faces. | For I must ne’er love him whom thou dost hate. | Even so being full of your ne’er-cloying sweetness,"
+e'er,89,30,,,"deliver’d in the most bitter touch of sorrow that e’er I heard virgin | [_Aside._] This is the first truth that e’er thine own tongue was | The last that e’er I took her leave at court,"
+i' th' / i'th',231,24,,,"Looks bleak i’ th’ cold wind: withal, full oft we see | Did show ourselves i’ th’ field, and to that end | Chiefly i’ th’ world; more laughed at that I should"
+"th' + word (th'art, th'other, ...)",93,13,,,"Th’ambition in my love thus plagues itself: | Confess it, t’one to th’other; and thine eyes | To th’extreme edge of hazard."

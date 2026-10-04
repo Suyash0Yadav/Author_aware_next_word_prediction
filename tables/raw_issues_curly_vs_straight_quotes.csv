@@ -1,0 +1,7 @@
+character,count
+’ (curly apostrophe),26332
+' (straight apostrophe),1
+‘ (curly open single quote),372
+“ (curly open double quote),1232
+” (curly close double quote),1059
+""" (straight double quote)",0

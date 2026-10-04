@@ -1,0 +1,7 @@
+column,dtype,n_unique,n_missing,example
+title,str,44,0,THE SONNETS
+slug,str,44,0,sonnets
+category,str,5,0,Poetry
+num_lines,int64,44,0,2774
+num_words,int64,44,0,17705
+num_chars,int64,44,0,98329

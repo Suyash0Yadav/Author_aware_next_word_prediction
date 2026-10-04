@@ -1,0 +1,6 @@
+category,train,val,test
+Comedy,10,1,1
+Tragedy,9,1,1
+History,8,1,1
+Romance,3,1,1
+Poetry,6,0,0

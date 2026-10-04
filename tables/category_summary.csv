@@ -1,0 +1,6 @@
+category,num_works,total_words,avg_words_per_work,pct_of_words
+Comedy,12,257700,21475,26.8
+Tragedy,11,278359,25305,28.9
+History,10,259698,25970,27.0
+Romance,5,118503,23701,12.3
+Poetry,6,48980,8163,5.1

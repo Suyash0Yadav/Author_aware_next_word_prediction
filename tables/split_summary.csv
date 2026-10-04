@@ -1,0 +1,4 @@
+split,num_works,num_words,pct_of_words
+train,36,762312,79.14
+val,4,108313,11.24
+test,4,92615,9.61
