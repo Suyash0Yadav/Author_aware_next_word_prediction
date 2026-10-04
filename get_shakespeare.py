@@ -88,7 +88,10 @@ CATEGORIES = {
     "THE TRAGEDY OF TITUS ANDRONICUS": "Tragedy",
     "THE HISTORY OF TROILUS AND CRESSIDA": "Tragedy",
     # History
+    "THE LIFE AND DEATH OF KING JOHN": "History",
     "KING JOHN": "History",
+    "THE TRAGEDY OF OTHELLO, THE MOOR OF VENICE": "Tragedy",
+    "TROILUS AND CRESSIDA": "Tragedy",
     "KING RICHARD THE SECOND": "History",
     "KING RICHARD THE THIRD": "History",
     "THE FIRST PART OF KING HENRY THE FOURTH": "History",
