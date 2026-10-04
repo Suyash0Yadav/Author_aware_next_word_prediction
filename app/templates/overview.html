@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<h1>The Bard's Keyboard</h1>
+<p class="lead">{{ problem }}</p>
+
+<h2 style="border-top:none; margin-top:.8em">From text to keyboard</h2>
+<div class="pipeline" role="list">
+  {% for name, text in pipeline %}
+    <div class="step" role="listitem"><b>{{ loop.index }}. {{ name }}</b><span>{{ text }}</span></div>
+    {% if not loop.last %}<div class="arrow" aria-hidden="true">&rarr;</div>{% endif %}
+  {% endfor %}
+</div>
+
+<h2>Headline results</h2>
+{% if cards %}
+<div class="cards">
+  {% for c in cards %}
+  <div class="card">
+    <h3>{{ c.title }} {{ S.badge(c.badge) }}</h3>
+    <div class="big">{{ c.big }}</div>
+    <div class="sub">{{ c.sub }}</div>
+    <div class="src">source: <code>{{ c.source }}</code></div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}{{ S.notice_missing('result tables for the headline cards') }}{% endif %}
+
+{{ S.figure_html('rnn_test_comparison.png') }}
+
+<h2>Where to go next</h2>
+<ul>
+  <li><a href="/dataset">Dataset</a> - the corpus, the split by work, vocabulary statistics and the archaic keywords.</li>
+  <li><a href="/preprocessing">Preprocessing</a> - step through the cleaning stages on a Hamlet passage.</li>
+  <li><a href="/models">Models &amp; Results</a> - the five models on the test set, seeds, confidence intervals, qualitative examples.</li>
+  <li><a href="/cross-domain">Cross-domain</a> - what happens when the model was trained on modern English.</li>
+  <li><a href="/postprocessing">Postprocessing</a> - from raw model output to what the user sees, and the reranking experiment.</li>
+  <li><a href="/keyboard">Keyboard</a> - type with the models, inspect their predictions, colour a passage by prediction rank.</li>
+</ul>
+{% endblock %}

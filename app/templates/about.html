@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<h1>About</h1>
+
+<h2 style="border-top:none">Team</h2>
+<div class="cards">
+  <div class="card"><h3>Team name</h3><div class="big">[TEAM NAME]</div><div class="sub">placeholder - replace in <code>app/templates/about.html</code></div></div>
+  <div class="card"><h3>Members</h3><div class="sub">[Member 1 - role]<br>[Member 2 - role]<br>[Member 3 - role]<br>[Member 4 - role]</div></div>
+  <div class="card"><h3>Course / supervisor</h3><div class="sub">[Course name]<br>[Supervisor]</div></div>
+</div>
+
+<h2>Related work</h2>
+<p class="note warn">The references describe the methods used in this project. They were written from memory without internet access and were not checked against the originals: verify the details before submission.</p>
+<ul>{% for ref, role in related %}<li>{{ ref }} <em>({{ role }})</em></li>{% endfor %}</ul>
+
+<h2>Limitations and disclosures</h2>
+<p>From the project README ("Protocol and disclosures").</p>
+{{ limitations }}
+
+<h2>How to reproduce the results</h2>
+<p>From the project README ("Reproduce everything, in order").</p>
+{{ reproduce }}
+
+<h2 id="key-numbers">Key numbers</h2>
+<p>The single source of truth for every number quoted in more than one place, generated from the result files by <code>docs/make_key_numbers.py</code>.</p>
+{{ key_numbers }}
+{% endblock %}

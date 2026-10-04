@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Cross-domain{% endblock %}
+{% block content %}
+<h1>Cross-domain: Shakespeare vs modern English</h1>
+<p class="lead">Does autocomplete trained on modern English work on Shakespeare, and vice versa? The WikiText-2 training text was subsampled to the same number of tokens as the Shakespeare training text, so the comparison is about <em>domain</em>, not data size. Every model is scored on both test sets against the real target words (a target that is missing from the model's vocabulary counts as a miss).</p>
+
+<h2>Training and test domain {{ S.badge('test') }}</h2>
+{% if cross_json %}
+<div class="controls"><label>Metric
+  <select id="metric"><option value="top3">Top-3 accuracy</option><option value="top1">Top-1 accuracy</option><option value="top5">Top-5 accuracy</option><option value="ksr">Keystroke savings rate</option><option value="oov_word_rate">Unknown target words (OOV)</option></select></label></div>
+<div class="cols-2" id="heatmaps"></div>
+<p class="small">{{ S.badge('test') }} Interactive version of the heatmaps: rows are the training domain, columns the test domain; the diagonal is in-domain. It shows how much the chosen metric drops (or, for unknown targets, rises) when the training text is the wrong kind.</p>
+<script type="application/json" id="cross-data">{{ cross_json|tojson }}</script>
+{% else %}{{ S.notice_missing('tables/baseline_cross_eval.csv') }}{% endif %}
+{{ S.figure_html('baseline_heatmaps.png') }}
+<details><summary>Full table</summary>{{ cross_tbl }}</details>
+
+<h2>Archaic keywords {{ S.badge('test') }}</h2>
+{{ S.figure_html('baseline_archaic.png') }}
+
+<h2>Side by side: what each model suggests {{ S.badge('test') }}</h2>
+<p>The same ten test-play prefixes. "Rank" is the position of the actual next word among the model's candidates (a very large number, or "not in vocabulary", means the model cannot offer it).</p>
+{{ examples_tbl }}
+
+<h2>Fairness checks</h2>
+<h3>In-domain numbers compared with the main results table</h3>
+<p>Scoring against the unmapped words (unknown targets count as misses) makes the in-domain Shakespeare numbers slightly lower than in the main table, which excluded unknown targets.</p>
+{{ indomain_tbl }}
+<h3>The two corpora</h3>
+{{ data_tbl }}
+{{ S.figure_html('baseline_wikitext_lstm_curve.png') }}
+{% endblock %}
+{% block scripts %}<script src="/static/crossdomain.js"></script>{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Preprocessing{% endblock %}
+{% block content %}
+<h1>Preprocessing</h1>
+<p class="lead">Raw Gutenberg text still contains play titles, character lists, ACT/SCENE headers, speaker tags and stage directions. Eight stages turn it into sentences of lowercase tokens; every stage's output is saved so it can be inspected.</p>
+
+<h2>Stage table</h2>
+{{ stage_tbl }}
+<p class="note">Stages 0-6 are counted in whitespace words, stages 7-9 in tokens (words + punctuation + &lt;num&gt;), so the unit changes between stages 6 and 7. The vocabulary of stages 0-8 is counted over all works; the last row is the final train-only vocabulary.</p>
+{{ S.figure_html('preprocessing_stage_counts.png') }}
+
+<h2>Stage stepper</h2>
+<p>Pick a stage to see a passage before and after it, with the word clouds of the two stages (stop-words removed).</p>
+<div class="stepper" id="stepper" data-stages='{{ stages_json|tojson }}'>
+  <div class="controls"><label>Passage
+    <select id="sample">{% for s in samples %}<option value="{{ s.key }}">{{ s.label }}</option>{% endfor %}</select></label></div>
+  <div class="stage-buttons" id="stage-buttons" role="group" aria-label="Preprocessing stage"></div>
+  <p id="stage-desc" class="note"></p>
+  <div class="sidebyside">
+    <div><h4 id="before-title">Before</h4><pre id="before"></pre></div>
+    <div><h4 id="after-title">After</h4><pre id="after"></pre></div>
+  </div>
+  <div class="clouds"><div><h4 id="cloud-before-title"></h4><img id="cloud-before" alt="word cloud before this stage"></div><div><h4 id="cloud-after-title"></h4><img id="cloud-after" alt="word cloud after this stage"></div></div>
+  <p class="small">{{ S.badge('all') }} Word clouds of all works at the previous and the chosen stage (stop-words removed). They show which words dominate the text at each point, so you can see structure words such as <em>enter</em> and <em>exeunt</em> disappear when the stage that removes them is reached.</p>
+</div>
+
+<h2>Before / after for the whole corpus</h2>
+<div class="figs-2">{{ S.figure_html('preprocessing_wordclouds_before_after.png') }}{{ S.figure_html('preprocessing_sentence_length.png') }}</div>
+
+<h2>What is left over (residue)</h2>
+<p>Structure that the rules could still detect after cleaning, as a share of the remaining text.</p>
+{{ residue_tbl }}
+
+<h2>Why the unknown-word rate on test went down</h2>
+<p>Cleaning removed the speaker tags and stage directions of the held-out plays, which were full of character names the model had never seen. The decomposition separates that effect from the effect of the minimum-frequency cut.</p>
+{{ oov_dec_tbl }}
+<div class="cols-2"><div><h3>Which tokens were removed</h3>{{ oov_mech_tbl }}</div><div><h3>Unknown words per split (final vocabulary)</h3>{{ oov_tbl }}</div></div>
+
+<h2>The rules in practice</h2>
+{{ rules_tbl }}
+{% endblock %}
+{% block scripts %}<script src="/static/preprocessing.js"></script>{% endblock %}

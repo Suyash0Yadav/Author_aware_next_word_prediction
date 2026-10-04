@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Models & Results{% endblock %}
+{% block content %}
+<h1>Models &amp; Results</h1>
+<p class="lead">Kneser-Ney n-grams, a vanilla RNN and an LSTM, scored by one shared evaluator: same vocabulary, same data loader, context = the current sentence only. Test-set results and validation (tuning) results are always shown separately and labelled.</p>
+
+<h2>Main results {{ S.badge('test') }}</h2>
+<p>Five models on the held-out test plays, from <code>results/metrics.csv</code> (rows with split = test). Click a column header to sort; the best value of each column is highlighted; hover a header for its definition.</p>
+{{ main_tbl }}
+{% for n in main_notes %}<div class="note warn">{{ n }}</div>{% endfor %}
+<details><summary>Metric definitions</summary><ul>{% for k, v in metric_help.items() %}<li><strong>{{ v[0] }}</strong> ({{ 'higher' if v[1] else 'lower' }} is better): {{ v[2] }}</li>{% endfor %}</ul></details>
+<p class="note">For the n-gram rows "parameters" means stored n-gram types. Latency here is one <em>model call</em> on the CPU; the end-to-end time in the app is on the <a href="/about#key-numbers">key numbers</a> page.</p>
+{{ S.figure_html('rnn_test_comparison.png') }}
+
+<h2>Robustness {{ S.badge('test') }}</h2>
+<h3>Three training seeds (mean &plusmn; std)</h3>
+{{ seeds_tbl }}
+<details><summary>Every run</summary>{{ seeds_runs_tbl }}</details>
+{{ S.figure_html('robust_seeds.png') }}
+<h3>Paired bootstrap over test sentences</h3>
+<p>1,000 resamples of the test sentences, the same sentences for both models of a pair. A difference whose 95 % interval excludes 0 is statistically distinguishable from zero.</p>
+{{ boot_tbl }}
+{{ S.figure_html('robust_bootstrap_ci.png') }}
+<h3>McNemar's test: LSTM vs KN trigram on the thou-family</h3>
+{{ mcnemar_tbl }}
+<h3>Stateful vs stateless LSTM latency</h3>
+{{ latency_tbl }}
+{{ S.figure_html('robust_latency.png') }}
+
+<h2>Perplexity, discount and accuracy of the n-grams {{ S.badge('val') }}</h2>
+<div class="figs-2">{{ S.figure_html('ngram_val_ppl_vs_n.png') }}{{ S.figure_html('ngram_val_ppl_vs_discount.png') }}</div>
+<div class="figs-2">{{ S.figure_html('ngram_val_topk_vs_n.png') }}{{ S.figure_html('ngram_size_and_latency_vs_n.png') }}</div>
+{{ S.figure_html('ngram_ksr_decomposition.png') }}
+
+<h2>Neural models: training and tuning {{ S.badge('val') }}</h2>
+<div class="figs-2">{{ S.figure_html('rnn_training_curves.png') }}{{ S.figure_html('lstm_grid_val_curves.png') }}</div>
+{{ S.figure_html('rnn_ensemble_lambda.png') }}
+
+<h2>Accuracy by sentence position {{ S.badge('test') }}</h2>
+{{ S.figure_html('rnn_top1_by_position.png') }}
+<details><summary>Table</summary>{{ pos_tbl }}</details>
+
+<h2>Archaic pronouns and verb forms {{ S.badge('test') }}</h2>
+{{ S.figure_html('rnn_top1_archaic_groups.png') }}
+<details open><summary>Table</summary>{{ groups_tbl }}</details>
+
+<h2>Qualitative: the same ten prefixes, three models {{ S.badge('test') }}</h2>
+<p>Prefixes from the test plays; for each model the five best suggestions with their probabilities and the rank the actual next word received.</p>
+{{ qual_tbl }}
+
+<h2>Sampled sentences {{ S.badge('test') }}</h2>
+<p>Sentences generated from each model by sampling, at temperature 0.7 (sharper) and 1.0 (the model as is). Fluent text is not the goal of a keyboard, but it shows what each model has learnt.</p>
+{% if samples %}
+<div data-tabs>
+  <div class="tabs" role="tablist">{% for m in samples %}<button type="button" role="tab" data-tab="s-{{ loop.index }}">{{ m }}</button>{% endfor %}</div>
+  {% for m, temps in samples.items() %}
+  <div class="tabpanel" id="s-{{ loop.index }}" role="tabpanel">
+    <div class="cols-2 samples">{% for t in temps %}<div><h3>Temperature {{ t.temperature }}</h3><ol>{% for s in t.sentences %}<li>{{ s }}</li>{% endfor %}</ol></div>{% endfor %}</div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}{{ S.notice_missing('tables/rnn_samples.csv') }}{% endif %}
+
+<h2>Validation (tuning) runs {{ S.badge('val') }}</h2>
+<p class="note warn">Everything in this section is <strong>validation</strong> data used to choose hyper-parameters. It is shown for transparency and must not be quoted as a test result.</p>
+<details><summary>LSTM grid (hidden size x layers x dropout)</summary>{{ grid_tbl }}</details>
+<details><summary>Vanilla RNN runs</summary>{{ rnn_tbl }}</details>
+<details><summary>Kneser-Ney discount tuning</summary>{{ disc_tbl }}</details>
+<details><summary>Every validation row of results/metrics.csv</summary>{{ val_tbl }}</details>
+{% endblock %}

@@ -4,7 +4,7 @@ University NLP project. A keyboard-style next-word predictor and word completer 
 works (Project Gutenberg #100), comparing **n-gram language models** (Kneser-Ney, add-one, unigram) with an
 **RNN and an LSTM**, plus an interpolated ensemble, and a **modern-English baseline** (WikiText-2) to show how badly
 autocomplete trained on the wrong domain does. Includes the postprocessing pipeline between raw model output and what
-the user sees, and a small offline Flask demo ("The Bard's Keyboard").
+the user sees, and an offline Flask website ("The Bard's Keyboard") with a results dashboard for every phase and the keyboard demo.
 
 **Data:** 44 works, 963,240 words → 68,379 sentences, vocabulary of 14,713 tokens (train only, `min_freq = 2`),
 split *by work* 36 / 4 / 4 (train / val / test).
@@ -47,8 +47,8 @@ src/
   stats.py                paired bootstrap, McNemar          generate.py   sampling
   postprocess.py          stages 1-6 between model output and the screen
   train_rnn.py / train_seeds.py / train_baseline.py   training entry points (checkpoints in models/)
-app/                      Flask demo (app.py, static/index.html, demo_prefixes.txt, README.md, latency benchmark)
-tests/                    95 pytest tests (+ smoke_ui.py: browser test of the demo, run by hand)
+app/                      the website: results dashboard + keyboard demo (app.py, site_data.py, pages.py, templates/, static/, demo_prefixes.txt, README.md)
+tests/                    143 pytest tests (+ smoke_ui.py: browser test of the website, run by hand)
 docs/                     kn_design.md (two deliberate differences from nltk), key_numbers.md (+ generator)
 tools/run_notebook.py     execute a notebook from the command line
 tables/  figures/         every table (CSV) and figure (PNG, dpi 200) cited in the report
@@ -81,10 +81,10 @@ python tools/run_notebook.py notebooks/07_postprocessing.ipynb  # ~4 min (CPU)
 python tools/run_notebook.py notebooks/08_reranking.ipynb       # ~2 min
 
 python app/make_demo_prefixes.py           # <1 min -> app/demo_prefixes.txt (needs the models of 04 and 06)
-python app/app.py                          # the keyboard demo at http://127.0.0.1:5000 (works offline)
+python app/app.py                          # the website (dashboard + keyboard demo) at http://127.0.0.1:5000 (works offline)
 python app/benchmark_latency.py            # ~2 min -> tables/app_latency.csv
 python docs/make_key_numbers.py            # refreshes docs/key_numbers.md and fails if a consistency check breaks
-python -m pytest tests -q                  # ~1.5 min, 95 tests
+python -m pytest tests -q                  # ~1 min, 143 tests
 ```
 
 Notes: total about 2 hours on this machine, of which ~95 minutes is GPU training. Notebooks 03 and 04 evaluate the test

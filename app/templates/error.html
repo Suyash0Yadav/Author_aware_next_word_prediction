@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Something went wrong on this page</h1>
+<p>The page <code>{{ page }}</code> could not be built. The details are below and in the server console.</p>
+<pre class="trace">{{ trace }}</pre>
+{% endblock %}

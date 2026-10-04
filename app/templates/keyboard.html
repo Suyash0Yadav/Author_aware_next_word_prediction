@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Keyboard{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/keyboard.css">{% endblock %}
+{% block content %}
+<h1>Keyboard</h1>
+<p class="lead">Type with the physical keyboard or tap the on-screen keys. After a space the model predicts the <em>next word</em>; in the middle of a word it <em>completes</em> it. The context is the current sentence only (it restarts after <b>.</b> <b>!</b> <b>?</b>), exactly as in the evaluation.</p>
+
+<div data-tabs id="kb-tabs">
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="tab-phone">Phone keyboard</button>
+    <button type="button" role="tab" data-tab="tab-inspect">Text inspector</button>
+  </div>
+
+  <!-- ===================================================================== phone keyboard -->
+  <div class="tabpanel" id="tab-phone" role="tabpanel">
+    <div class="controls">
+      <label>Model <select id="model"></select></label>
+      <label><input type="checkbox" id="compare"> Compare with <select id="model2" disabled></select></label>
+      <label><input type="checkbox" id="probs"> Show probabilities</label>
+      <label title="Order suggestions by expected keystrokes saved: probability x (word length - typed letters)"><input type="checkbox" id="rerank"> Favour keystroke savings</label>
+      <label>Try a prefix from a test play <select id="demo"><option value="">(choose)</option></select></label>
+      <button type="button" class="btn" id="reset">Clear &amp; reset counter</button>
+    </div>
+
+    <div class="kb-layout">
+      <div>
+        <div class="phone" aria-label="Phone mockup">
+          <div class="phone-top"><span>9:41</span><span class="notch" aria-hidden="true"></span><span aria-hidden="true">&#9679;&#9679;&#9679;</span></div>
+          <div class="screen">
+            <div class="msg-head">New message</div>
+            <textarea id="editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Message text"
+                      placeholder="Type here with your keyboard or tap the keys below&hellip;"></textarea>
+          </div>
+          <div id="bars" class="suggest-bars" aria-live="polite"></div>
+          <div class="osk" id="osk" aria-label="On-screen keyboard"></div>
+        </div>
+        <div class="stats" id="stats">
+          <div class="stat"><b id="s-keys">0</b><span>keys pressed</span></div>
+          <div class="stat"><b id="s-chars">0</b><span>characters produced</span></div>
+          <div class="stat saved" id="s-saved-box"><b id="s-saved">&mdash;</b><span>keystrokes saved</span></div>
+          <div class="stat"><b id="s-acc">0</b><span>suggestions accepted</span></div>
+          <div class="stat"><b id="s-ms">&mdash;</b><span>ms per prediction</span></div>
+        </div>
+        <p class="small">Shortcuts: <kbd>Tab</kbd> accepts the first suggestion, <kbd>Alt</kbd>+<kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd> the first, second or third; clicking a chip (or a bar in the inspector) works too. Accepting inserts the word and a space and counts as <b>one key press</b>; a following <b>. , ; : ! ?</b> removes that space. Keystroke savings = 1 &minus; keys pressed / characters produced (backspaces count as keys; the counter restarts when the box is emptied; text loaded by "Try a prefix" or pasted is not counted).</p>
+      </div>
+
+      <div id="inspector" class="inspector-col" aria-label="Prediction inspector">
+        <h2 class="insp-title">Prediction inspector</h2>
+        <p class="small">The ten most probable <em>words</em> for the current context and model (after filtering and the prefix filter, probabilities renormalised over the candidate words). The three highlighted bars are the suggestion chips. Click a bar to accept that word.</p>
+        <div id="insp-panels"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== text inspector -->
+  <div class="tabpanel" id="tab-inspect" role="tabpanel">
+    <p>Choose a passage from a <strong>test play</strong> (plays the models never saw) or paste up to about 300 words. Every word is coloured by the rank the model gave it <em>given the sentence so far</em>; a word that is not in the model's vocabulary counts as missed.</p>
+    <div class="legend" aria-label="Colour legend"><span class="c-g">top-1</span><span class="c-y">top-3</span><span class="c-o">top-10</span><span class="c-r">missed</span></div>
+    <div class="controls">
+      <label>Passage <select id="ti-passage"><option value="">(choose a test-play passage)</option></select></label>
+      <label>Model <select id="ti-model"></select></label>
+      <label><input type="checkbox" id="ti-compare"> Compare with <select id="ti-model2" disabled></select></label>
+      <button type="button" class="btn" id="ti-go">Colour the passage</button>
+    </div>
+    <textarea id="ti-text" rows="8" class="ti-text" aria-label="Passage to analyse" placeholder="...or paste your own text here (up to about 300 words)"></textarea>
+    <div id="ti-note" class="note" hidden></div>
+    <div id="ti-results" class="ti-results"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/keyboard.js"></script>{% endblock %}

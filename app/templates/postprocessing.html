@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Postprocessing{% endblock %}
+{% block content %}
+<h1>Postprocessing</h1>
+<p class="lead">Between the model's probability vector and what the user sees there are explicit stages. The model only ever outputs lowercase tokens, including punctuation and special tokens; the stages turn that into clean, correctly cased suggestions and insert them into the text.</p>
+
+<h2>The stages</h2>
+<ol>{% for name, text in stages %}<li><strong>{{ name }}</strong> - {{ text }}</li>{% endfor %}</ol>
+
+<h2>Before and after: eight test-set prefixes {{ S.badge('test') }}</h2>
+<p>The top-5 after every stage for the LSTM. The user's text ends with the first letters of the word that actually comes next, so the prefix filter and the case restoration have something to do.</p>
+{{ stage_tbl }}
+
+<h2>Why filtering is needed {{ S.badge('test') }}</h2>
+{{ special_tbl }}
+{{ S.figure_html('postproc_raw_special_rate.png') }}
+
+<h2>Bias toward frequent words {{ S.badge('test') }}</h2>
+{{ S.figure_html('postproc_wordclouds.png') }}
+{{ concentration_tbl }}
+
+<h2>Case restoration {{ S.badge('test') }}</h2>
+<p>For correctly predicted words, how often does the restored casing equal the original casing in the text before lowercasing?</p>
+{{ case_tbl }}
+<p class="note">Most of the remaining mismatches are capitalised first words of verse lines (the Gutenberg text capitalises every line start); the second table counts them as correct, which is an upper bound.</p>
+{{ case_adj_tbl }}
+
+<h2>Optional stage 6: keystroke-aware reranking {{ S.badge('val') }}</h2>
+<p>Short frequent words save almost no keystrokes. Stage 6 orders candidates by the expected keystrokes saved, <code>P(w) x (len(w) - typed letters)</code>, instead of by probability. Only the order of the three suggestions changes.</p>
+<div class="note">{{ rerank_test_note }}</div>
+{{ rerank_val_tbl }}
+<div class="figs-2">{{ S.figure_html('rerank_comparison_val.png') }}{{ S.figure_html('rerank_ksr_by_word_length.png') }}</div>
+<details><summary>By target length (validation)</summary>{{ rerank_len_tbl }}</details>
+{% if rerank_test_tbl %}<details><summary>Test-set baseline rows of the reranking table</summary>{{ rerank_test_tbl }}</details>{% endif %}
+<h3>Archaic words {{ S.badge('exploratory') }}</h3>
+<p class="note warn">Exploratory: on the archaic-keyword targets the reranking looks different from the overall picture. This was <strong>not</strong> the pre-declared decision criterion and was measured on validation only, so it is a lead for further work, not a result.</p>
+{{ rerank_expl_tbl }}
+<h3>What the chips look like</h3>
+{{ rerank_examples_tbl }}
+{% endblock %}

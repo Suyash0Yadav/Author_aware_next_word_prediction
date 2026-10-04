@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Dataset{% endblock %}
+{% block content %}
+<h1>Dataset</h1>
+<p class="lead">Shakespeare's complete works (Project Gutenberg eBook #100), cut into individual works. The test set consists of whole plays the models never saw.</p>
+
+<h2>Corpus statistics</h2>
+<div class="cols-2">
+  <div><h3>Corpus</h3>{{ overview_tbl }}</div>
+  <div><h3>Vocabulary (exploratory definition)</h3>{{ vocab_tbl }}
+    <p class="note">These EDA numbers use a simple regex tokenizer on the whole corpus. The vocabulary actually used by the models is smaller (training works only, frequency cut) - see <a href="/about#key-numbers">key numbers</a>.</p></div>
+</div>
+<details><summary>Data types of the metadata columns</summary>{{ dtypes_tbl }}</details>
+
+<h2>Words per category</h2>
+{{ S.figure_html('words_per_work_by_category.png') }}
+<div class="figs-2">{{ S.figure_html('category_words_and_works.png') }}<div>{{ category_tbl }}</div></div>
+
+<h2>Train / validation / test split</h2>
+<p>The split is by whole work, never by line, so no passage of a play leaks between sets. Poetry stays in train; validation and test each hold one work of every other category.</p>
+<div class="cols-2"><div><h3>Words per split</h3>{{ split_tbl }}</div><div><h3>Works per category and split</h3>{{ split_cat_tbl }}</div></div>
+<h3>Every work</h3>
+{% if works %}
+<div class="controls"><label>Split
+  <select id="f-split"><option value="">all</option><option>train</option><option>val</option><option>test</option></select></label>
+  <label>Category <select id="f-cat"><option value="">all</option>{% for c in works|map(attribute='category')|unique %}<option>{{ c }}</option>{% endfor %}</select></label>
+  <span id="f-count" class="note" style="margin:0"></span></div>
+<div class="table-wrap"><table class="data sortable" id="works"><thead><tr><th>Split</th><th>Work</th><th>Category</th><th>Words</th></tr></thead><tbody>
+{% for w in works %}<tr data-split="{{ w.split }}" data-cat="{{ w.category }}"><td>{{ w.split }}</td><td style="text-align:left">{{ w.title }}</td><td style="text-align:left">{{ w.category }}</td><td data-v="{{ w.num_words }}">{{ '{:,}'.format(w.num_words) }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}{{ S.notice_missing('data/split.csv') }}{% endif %}
+
+<h2>Zipf's law and sparsity</h2>
+<div class="figs-2">{{ S.figure_html('zipf_rank_frequency.png') }}{{ S.figure_html('frequency_buckets.png') }}</div>
+{{ buckets_tbl }}
+<h3>N-gram sparsity</h3>
+<p>Share of distinct n-gram types that occur exactly once in the corpus. A count-based model has no evidence for those, which is why smoothing is needed.</p>
+<div class="cols-2"><div>{{ sparsity_svg }}<p class="small">{{ S.badge('all') }} Share of distinct n-gram types seen exactly once, by n. It shows how quickly counts run out as the context grows, which limits high-order n-gram models.</p></div><div>{{ sparsity_tbl }}</div></div>
+{{ S.figure_html('line_length_histogram.png') }}
+
+<h2>Word clouds</h2>
+<div class="figs-2">{{ S.figure_html('wordcloud_corpus_raw.png') }}{{ S.figure_html('wordcloud_corpus_no_stopwords.png') }}</div>
+{{ S.figure_html('wordclouds_by_category.png') }}
+
+<h2>Archaic keywords</h2>
+<p>Words much more typical of Shakespeare than of modern English (log-odds with an informative Dirichlet prior against WikiText-2), filtered for names and stage words. They are the targets of the "archaic" metrics.</p>
+<div class="figs-2">{{ S.figure_html('distinctive_words_top30_excluding_names_bar.png') }}{{ S.figure_html('distinctive_words_top30_bar.png') }}</div>
+<details><summary>Table: top archaic candidates (rate ratio = how many times more frequent per token than in WikiText-2)</summary>{{ archaic_tbl }}</details>
+{{ S.figure_html('top20_ngrams_without_stopwords.png') }}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var sp = document.getElementById("f-split"), ct = document.getElementById("f-cat"), tb = document.querySelector("#works tbody");
+  if (!sp || !tb) return;
+  function apply() {
+    var n = 0;
+    Array.prototype.forEach.call(tb.rows, function (r) { var ok = (!sp.value || r.dataset.split === sp.value) && (!ct.value || r.dataset.cat === ct.value); r.hidden = !ok; if (ok) n++; });
+    document.getElementById("f-count").textContent = n + " works shown";
+  }
+  sp.addEventListener("change", apply); ct.addEventListener("change", apply); apply();
+})();
+</script>
+{% endblock %}

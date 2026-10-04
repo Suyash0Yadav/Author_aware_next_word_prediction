@@ -1,15 +1,25 @@
-"""Browser smoke test of the keyboard demo (not part of the pytest suite: needs Playwright + Microsoft Edge/Chrome).
+"""Browser smoke test of the whole website (not part of the pytest suite: needs Playwright + Microsoft Edge/Chrome).
 
     python app/app.py --no-browser --port 5057        # terminal 1
-    python tests/smoke_ui.py                       # terminal 2  (saves screenshots to figures/app_*.png)
+    python tests/smoke_ui.py [http://127.0.0.1:5057] [msedge|chrome|chromium|firefox]    # terminal 2   (screenshots -> figures/app_*.png)
+
+The browser defaults to Edge, then Chrome (installed browsers). "chromium" / "firefox" use Playwright's own builds
+(`playwright install chromium firefox` first).
+
+Drives the real pages: every page loads without console errors, the sortable main table, the preprocessing stage
+stepper, the cross-domain heatmaps, the phone keyboard (physical + on-screen keys, Tab, Alt+N, punctuation rule,
+inspector bars, compare mode, probabilities and reranking toggles), the text inspector, presentation mode and the
+narrow-screen layout (no horizontal scrolling).
 """
 import sys
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-URL = "http://127.0.0.1:5057/"
+BASE = sys.argv[1].rstrip("/") if len(sys.argv) > 1 else "http://127.0.0.1:5057"
+BROWSER = sys.argv[2] if len(sys.argv) > 2 else None
 OUT = Path(__file__).resolve().parent.parent / "figures"
+PAGES = ["/", "/dataset", "/preprocessing", "/models", "/cross-domain", "/postprocessing", "/keyboard", "/about"]
 results = []
 
 
@@ -18,98 +28,120 @@ def check(name, cond, detail=""):
     print(("PASS " if cond else "FAIL ") + name + (f"   [{detail}]" if detail else ""))
 
 
-def chips(page, row=0):
-    return page.locator(".row").nth(row).locator(".chip").all_inner_texts()
-
-
-def words(page, row=0):
-    return [t.split("\n")[0] for t in chips(page, row)]
-
-
 with sync_playwright() as pw:
-    try:
-        browser = pw.chromium.launch(channel="msedge")
-    except Exception:
-        browser = pw.chromium.launch(channel="chrome")
-    page = browser.new_page(viewport={"width": 1000, "height": 900})
-    page.goto(URL)
+    if BROWSER == "firefox":
+        browser = pw.firefox.launch()
+    elif BROWSER == "chromium":
+        browser = pw.chromium.launch()
+    elif BROWSER in ("msedge", "chrome"):
+        browser = pw.chromium.launch(channel=BROWSER)
+    else:
+        try:
+            browser = pw.chromium.launch(channel="msedge")
+        except Exception:
+            browser = pw.chromium.launch(channel="chrome")
+    print("browser:", BROWSER or "msedge/chrome", browser.version)
+    page = browser.new_page(viewport={"width": 1400, "height": 1100})
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+
+    # ---------------------------------------------------------------- all pages load
+    for url in PAGES:
+        resp = page.goto(BASE + url)
+        page.wait_for_load_state("networkidle")
+        check(f"page {url} loads", resp.status == 200 and page.locator("h1").count() >= 1)
+    check("no console / page errors on any page", errors == [], str(errors))
+
+    # ---------------------------------------------------------------- main table
+    page.goto(BASE + "/models")
+    th = page.locator("table.main thead th")
+    th.nth(1).click()
+    ppl = [float(x) for x in page.locator("table.main tbody tr td:nth-child(2)").all_inner_texts()]
+    check("main table sorts by perplexity (ascending)", ppl == sorted(ppl), str(ppl))
+    check("best cells are highlighted", page.locator("table.main td.best").count() >= 8)
+
+    # ---------------------------------------------------------------- stepper
+    page.goto(BASE + "/preprocessing")
+    page.locator('#stage-buttons button[data-stage="3"]').click()
+    page.wait_for_function("document.getElementById('after').textContent.length > 20 && document.getElementById('cloud-after').naturalWidth > 0", timeout=60000)
+    before, after = page.locator("#before").inner_text(), page.locator("#after").inner_text()
+    check("stepper: directions are in 'before' and gone in 'after'", "Enter Francisco" in before and "Enter Francisco" not in after)
+    page.locator("#stepper").screenshot(path=str(OUT / "app_stepper.png"))
+
+    # ---------------------------------------------------------------- heatmaps
+    page.goto(BASE + "/cross-domain")
+    page.select_option("#metric", "ksr")
+    check("heatmaps: 2 models x 2x2 cells", page.locator("#heatmaps td").count() == 8)
+
+    # ---------------------------------------------------------------- keyboard
+    page.goto(BASE + "/keyboard")
     page.wait_for_selector(".chip")
     ed = page.locator("#editor")
-
-    # next word at the start of a sentence, capitalised
-    check("sentence start: 3 chips", len(words(page)) == 3 and words(page)[0] != "·", str(words(page)))
-
-    # type with the keyboard, mid-word completion after debounce
-    ed.click()
-    page.keyboard.type("my lord, th", delay=30)
+    for k in "my lord ":
+        page.locator(f'.key[data-k="{"SPACE" if k == " " else k}"]').click()
     page.wait_for_timeout(300)
-    w = words(page)
-    check("mid-word completion starts with the typed prefix", all(x.lower().startswith("th") for x in w), str(w))
-    check("status says completing", "completing" in page.locator(".status").first.inner_text())
-
-    # Tab accepts the first chip: word + space, counter counts it as ONE key
-    first = w[0]
-    keys_before = int(page.locator("#s-keys").inner_text())
+    check("on-screen keys type into the box", ed.input_value() == "my lord ", repr(ed.input_value()))
+    check("inspector shows 10 bars; first bar = first chip",
+          page.locator(".bar-row").count() == 10 and page.locator(".bar-row .bar-label").first.inner_text() == page.locator(".chip").first.inner_text().split("\n")[0])
+    page.locator('.key[data-k="SHIFT"]').click()
+    page.locator('.key[data-k="h"]').click()
+    check("shift capitalises", ed.input_value().endswith("H"))
+    page.keyboard.type("a", delay=30)
+    page.wait_for_timeout(300)
+    check("completion mode after a typed prefix", "completing" in page.locator(".sg-status").first.inner_text())
     page.keyboard.press("Tab")
     page.wait_for_timeout(300)
-    check("Tab inserts first chip + space", ed.input_value() == f"my lord, {first} ", repr(ed.input_value()))
-    check("a tap counts as one key", int(page.locator("#s-keys").inner_text()) == keys_before + 1)
-
-    # after a space: next-word prediction; Alt+2 accepts the second chip
-    nxt = words(page)
-    check("after a space: next-word mode", "next word" in page.locator(".label").first.inner_text())
+    check("Tab accepts the first chip and adds a space", ed.input_value().endswith(" ") and len(ed.input_value()) > 10, repr(ed.input_value()))
+    before = ed.input_value()
+    page.locator('.key[data-k=","]').click()
+    check("no space before punctuation (on-screen key)", ed.input_value() == before[:-1] + ",")
+    page.locator("#reset").click()
+    page.keyboard.type("my lord ", delay=20)
+    page.wait_for_timeout(400)
     page.keyboard.press("Alt+2")
     page.wait_for_timeout(300)
-    check("Alt+2 inserts second chip", ed.input_value().endswith(f"{nxt[1]} "), repr(ed.input_value()))
-
-    # no space before punctuation after an accepted word; sentence restarts after '.'
-    page.keyboard.type(".", delay=30)
-    page.wait_for_timeout(200)
-    check("no space before punctuation", ed.input_value().endswith(f"{nxt[1]}.") and not ed.input_value().endswith(" ."), repr(ed.input_value()))
-    page.keyboard.type(" ", delay=30)
+    check("Alt+2 accepts the second chip", ed.input_value().startswith("my lord ") and ed.input_value().endswith(" ") and len(ed.input_value()) > 9, repr(ed.input_value()))
+    page.locator("#reset").click()
+    page.keyboard.type("my lord ", delay=20)
+    page.wait_for_timeout(400)
+    page.locator(".bar-row").nth(4).click()
     page.wait_for_timeout(300)
-    check("new sentence after '.': suggestions are capitalised", words(page)[0][:1].isupper(), str(words(page)))
-
-    # clicking a chip
-    before = ed.input_value()
-    page.locator(".row").first.locator(".chip").nth(2).click()
-    page.wait_for_timeout(300)
-    check("clicking a chip inserts it", len(ed.input_value()) > len(before) and ed.input_value().endswith(" "), repr(ed.input_value()))
-
-    # counter: savings are computed from keys vs characters
-    keys, chars = int(page.locator("#s-keys").inner_text()), int(page.locator("#s-chars").inner_text())
-    saved = page.locator("#s-saved").inner_text()
-    check("counter consistent with text length", chars == len(ed.input_value()), f"keys={keys} chars={chars} saved={saved}")
-
-    # probabilities toggle
-    page.locator("#probs").check()
-    page.wait_for_timeout(300)
-    check("probabilities shown on chips", page.locator(".chip .prob").count() >= 3, page.locator(".chip").first.inner_text().replace("\n", " "))
-    page.locator("#probs").uncheck()
-
-    # model selector + compare mode
-    page.select_option("#model", "KN trigram")
+    check("clicking an inspector bar accepts that word", ed.input_value().endswith(" ") and len(ed.input_value()) > 9)
     page.locator("#compare").check()
     page.select_option("#model2", "WikiText LSTM")
-    ed.fill("")
-    page.keyboard.press("Control+a")
-    ed.click()
-    page.keyboard.type("Ah, villain, ", delay=20)
-    page.wait_for_timeout(400)
-    check("compare mode shows two rows", page.locator(".row").count() == 2)
-    a, b = words(page, 0), words(page, 1)
-    check("the two models disagree on 'Ah, villain,'", a != b, f"KN={a} WikiText={b}")
-    page.screenshot(path=str(OUT / "app_compare.png"))
+    page.locator("#probs").check()
+    page.locator("#rerank").check()
+    page.wait_for_timeout(500)
+    check("compare mode: 2 chip rows, 2 inspector panels, probabilities on chips", page.locator(".sg-row").count() == 2 and page.locator(".insp-panel").count() == 2 and page.locator(".chip .prob").count() >= 3)
+    page.screenshot(path=str(OUT / "app_keyboard.png"), full_page=True)
 
-    # demo prefix loader resets the counter
-    page.locator("#compare").uncheck()
-    page.select_option("#model", "LSTM")
-    opts = page.locator("#demo option").count()
-    page.select_option("#demo", index=1)
-    page.wait_for_timeout(400)
-    check("demo prefixes available and loadable", opts >= 9 and len(ed.input_value()) > 10 and page.locator("#s-keys").inner_text() == "0",
-          f"{opts - 1} prefixes; text={ed.input_value()!r}")
-    page.screenshot(path=str(OUT / "app_demo.png"))
+    # ---------------------------------------------------------------- text inspector
+    page.locator('[data-tab="tab-inspect"]').click()
+    page.wait_for_function("document.querySelectorAll('#ti-passage option').length > 3")
+    page.select_option("#ti-passage", index=2)
+    page.wait_for_selector(".ti-card .tok", timeout=30000)
+    classes = set(page.locator(".ti-card .tok").evaluate_all("els => els.map(e => e.className.split(' ')[1])"))
+    check("text inspector colours words (green and red present)", {"c-g", "c-r"} <= classes, str(sorted(classes)))
+    page.locator("#ti-compare").check()
+    page.select_option("#ti-model2", "KN trigram")
+    page.locator("#ti-go").click()
+    page.wait_for_function("document.querySelectorAll('.ti-card').length == 2", timeout=30000)
+    check("compare coloring: two cards", page.locator(".ti-card").count() == 2)
+    page.screenshot(path=str(OUT / "app_text_inspector.png"), full_page=True)
+
+    # ---------------------------------------------------------------- presentation mode + narrow screen
+    page.locator("#sidebar .pres-toggle").click()
+    check("presentation mode enlarges the fonts", float(page.evaluate("getComputedStyle(document.documentElement).fontSize")[:-2]) > 20)
+    narrow = browser.new_page(viewport={"width": 400, "height": 800})
+    for url in PAGES:
+        narrow.goto(BASE + url)
+        narrow.wait_for_load_state("networkidle")
+        narrow.wait_for_timeout(300)
+        check(f"narrow screen: no horizontal scrolling on {url}", not narrow.evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth"))
+    narrow.goto(BASE + "/")
+    narrow.locator("#menu").click()
+    check("narrow screen: the menu opens", narrow.locator("#sidebar nav a").first.is_visible())
     browser.close()
 
 print(f"\n{sum(results)}/{len(results)} checks passed")

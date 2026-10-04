@@ -49,13 +49,25 @@ def post(c, **payload):
     return c.post("/api/suggest", json=payload)
 
 
-def test_index_page_is_served_and_fully_offline():
-    html = (ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
-    assert "<textarea" in html and "Tab" in html and "Alt" in html
-    urls = re.findall(r"""(?:src|href)\s*=\s*["']([^"']+)["']|url\(([^)]+)\)|@import\s+["']([^"']+)""", html)
-    external = [u for t in urls for u in t if u.startswith(("http://", "https://", "//"))]
-    assert external == []                                   # no CDN, no web fonts, no external resource at all
-    assert "cdn" not in html.lower()
+def test_keyboard_page_is_served_and_has_the_shortcuts(client):
+    c, _ = client
+    r = c.get("/keyboard")
+    assert r.status_code == 200
+    html = r.get_data(as_text=True)
+    assert "<textarea" in html and "Tab" in html and "Alt" in html          # the shortcuts are documented on the page
+    js = (ROOT / "app" / "static" / "keyboard.js").read_text(encoding="utf-8")
+    assert '"Tab"' in js and "Digit1" in js
+
+
+def test_templates_and_static_files_have_no_external_resources():
+    files = list((ROOT / "app" / "templates").glob("*.html")) + list((ROOT / "app" / "static").glob("*.*"))
+    assert files
+    for f in files:
+        text = f.read_text(encoding="utf-8")
+        urls = re.findall(r"""(?:src|href)\s*=\s*["']([^"']+)["']|url\(([^)]+)\)|@import\s+["']([^"']+)""", text)
+        external = [u for t in urls for u in t if u.startswith(("http://", "https://", "//"))]
+        assert external == [], (f.name, external)                           # no CDN, no web fonts, no external resource at all
+        assert "cdn" not in text.lower()
 
 
 def test_models_endpoint_lists_models_and_default(client):

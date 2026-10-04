@@ -62,6 +62,26 @@ def parse_typed(text):
     return context, partial.lower(), len(context) == 0
 
 
+def tokenize_spans(text):
+    """Like preprocess.tokenize but with character positions: returns (normalised text, spans) where each span is
+    (start, end, lowercase token, kind) and kind is "word", "num" or "punct". It uses the SAME normalisation and the
+    SAME patterns as the training data (P.stage1_normalize, P.DASH_RE, P.NUM_RE, P.TOKEN_RE), so the tokens are
+    exactly those of P.tokenize(normalised text) (tests/test_site.py checks this)."""
+    norm, _ = P.stage1_normalize(text)
+    blank = P.DASH_RE.sub(" ", norm)                                  # 1:1 character replacement: positions are kept
+    spans, masked = [], list(blank)
+    for m in P.NUM_RE.finditer(blank):
+        spans.append((m.start(), m.end(), "<num>", "num"))
+        masked[m.start():m.end()] = " " * (m.end() - m.start())
+    for m in P.TOKEN_RE.finditer("".join(masked)):
+        tok = m.group(0)
+        if tok == "<num>":
+            continue
+        spans.append((m.start(), m.end(), tok.lower(), "punct" if tok in D.PUNCT else "word"))
+    spans.sort()
+    return norm, spans
+
+
 # --------------------------------------------------------------------------------------
 # stages 1-3 on a probability vector
 # --------------------------------------------------------------------------------------
